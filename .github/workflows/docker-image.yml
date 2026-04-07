@@ -1,33 +1,79 @@
-name: Build and Push Multiple to GHCR
+name: Build Docker Image
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write   # Wajib untuk push ke GHCR
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Login to GHCR
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Login DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Build and push
-      uses: docker/build-push-action@v5
-      with:
-        context: .
-        push: true
-        tags: |
-          ghcr.io/${{ github.repository_owner }}/menjajal:latest
+      - name: Build and Pushs
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            resbya5e46/montok1:latest
+                      tags: |
+            resbya5e46/montok1:latest
+            resbya5e46/a8f3k2d9:latest
+            resbya5e46/q1w9z7x2:latest
+            resbya5e46/m4n8p2la:latest
+            resbya5e46/9xk3t7bz:latest
+            resbya5e46/r2d8c6f1:latest
+            resbya5e46/v7h3m9q2:latest
+            resbya5e46/p5s8k1z4:latest
+            resbya5e46/y2x6b9t3:latest
+            resbya5e46/c8n4w1q7:latest
+            resbya5e46/t3k9m2p8:latest
+            resbya5e46/u7v1x5d2:latest
+            resbya5e46/b6r3z9k1:latest
+            resbya5e46/j2h8q4m6:latest
+            resbya5e46/w5p9x3c7:latest
+            resbya5e46/n1t6k8z4:latest
+            resbya5e46/f3m7q2v9:latest
+            resbya5e46/z9x1c4v7:latest
+            resbya5e46/k8p2w5t1:latest
+            resbya5e46/d7q3m9n2:latest
+            resbya5e46/l4v8x1k6:latest
+            resbya5e46/s2z7p3w9:latest
+            resbya5e46/g6t1n8q4:latest
+            resbya5e46/x3c9v2b7:latest
+            resbya5e46/h8k4m1p6:latest
+            resbya5e46/p9w2z5x3:latest
+            resbya5e46/y7t1q8n4:latest
+            resbya5e46/m2v6c9k3:latest
+            resbya5e46/q5x8z1p7:latest
+            resbya5e46/a9n3t6w2:latest
+            resbya5e46/e4k7m1q9:latest
+            resbya5e46/r8p2v5x1:latest
+            resbya5e46/u3z9c6t4:latest
+            resbya5e46/i7m1k8p2:latest
+            resbya5e46/o2q6w9x3:latest
+            resbya5e46/s5v8n1t4:latest
+            resbya5e46/d9k3p7m2:latest
+            resbya5e46/f1x6z8q4:latest
+            resbya5e46/g4t9w2v7:latest
+            resbya5e46/h2m8p5k1:latest
+            resbya5e46/j7q1x3c9:latest
+            resbya5e46/k5v2n8t4:latest
+            resbya5e46/l9p6w1z3:latest
+            resbya5e46/n3x7k4m8:latest
+            resbya5e46/p1t9q6v2:latest
+            resbya5e46/q8w3c5z7:latest
+            resbya5e46/r4m2k9x1:latest
+            resbya5e46/t6v1p8n3:latest
+            resbya5e46/v9q5z2k4:latest
+            resbya5e46/x1m7t3p8:latest
