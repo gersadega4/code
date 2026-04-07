@@ -26,8 +26,6 @@ jobs:
           push: true
           tags: |
             resbya5e46/montok1:latest
-                      tags: |
-            resbya5e46/montok1:latest
             resbya5e46/a8f3k2d9:latest
             resbya5e46/q1w9z7x2:latest
             resbya5e46/m4n8p2la:latest
