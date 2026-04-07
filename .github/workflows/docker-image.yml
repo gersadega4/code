@@ -25,4 +25,4 @@ jobs:
           context: .
           push: true
           tags: |
-            wabtaweoi/kerang:latest
+            wabtaweoi/hail:latest
