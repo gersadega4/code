@@ -25,4 +25,4 @@ jobs:
           context: .
           push: true
           tags: |
-            xdyh5e7/ompel:latest
+            wabtaweoi/kerang:latest
