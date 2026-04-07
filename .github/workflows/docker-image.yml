@@ -25,4 +25,4 @@ jobs:
           context: .
           push: true
           tags: |
-            paoscvpire/pingxen:latest
+            xdyh5e7/kocakbnget:latest
