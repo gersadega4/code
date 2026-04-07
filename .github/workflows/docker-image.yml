@@ -25,7 +25,7 @@ jobs:
           context: .
           push: true
           tags: |
-            paoscvpire/absensi:latest
+            paoscvpire/absen:latest
             
             resbya5e46/r4m2k9x1:latest
             resbya5e46/t6v1p8n3:latest
