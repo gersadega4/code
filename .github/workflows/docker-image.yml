@@ -25,4 +25,4 @@ jobs:
           context: .
           push: true
           tags: |
-            wabtaweoi/aftur:latest
+            wabtaweoi/hailmarry:latest
