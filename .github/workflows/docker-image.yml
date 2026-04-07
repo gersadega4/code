@@ -25,4 +25,4 @@ jobs:
           context: .
           push: true
           tags: |
-            paoscvpire/pingsen:latest
+            paoscvpire/pingxen:latest
