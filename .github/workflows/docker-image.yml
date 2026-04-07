@@ -30,13 +30,19 @@ jobs:
         context: .
         push: true
         tags: |
-          ghcr.io/${{ github.repository_owner }}/stevia:latest
-          ghcr.io/${{ github.repository_owner }}/gulaaren:latest
-          ghcr.io/${{ github.repository_owner }}/fasting:latest
-          ghcr.io/${{ github.repository_owner }}/laori:latest
-          ghcr.io/${{ github.repository_owner }}/cortisol:latest
-          ghcr.io/${{ github.repository_owner }}/permen:latest
-          ghcr.io/${{ github.repository_owner }}/ulangulang:latest
-          ghcr.io/${{ github.repository_owner }}/bentarbentar:latest
-          ghcr.io/${{ github.repository_owner }}/ultah:latest
-          ghcr.io/${{ github.repository_owner }}/ucapindong:latest
+          ghcr.io/${{ github.repository_owner }}/x9a2k7m4p1zq:latest
+          ghcr.io/${{ github.repository_owner }}/b7n3v8c1x5r2:latest
+          ghcr.io/${{ github.repository_owner }}/q4w9e2r7t6y1:latest
+          ghcr.io/${{ github.repository_owner }}/m8z1k3p9x4c7:latest
+          ghcr.io/${{ github.repository_owner }}/a5s8d2f1g7h9:latest
+          ghcr.io/${{ github.repository_owner }}/u3y7t1r9e5w2:latest
+          ghcr.io/${{ github.repository_owner }}/n6m2b8v4c1x7:latest
+          ghcr.io/${{ github.repository_owner }}/p9o1i4u7y2t6:latest
+          ghcr.io/${{ github.repository_owner }}/l3k8j2h7g1f9:latest
+          ghcr.io/${{ github.repository_owner }}/z1x4c7v9b2n6:latest
+          ghcr.io/${{ github.repository_owner }}/r5t2y8u1i7o3:latest
+          ghcr.io/${{ github.repository_owner }}/d9f2g7h1j8k4:latest
+          ghcr.io/${{ github.repository_owner }}/s6a1q9w3e7r2:latest
+          ghcr.io/${{ github.repository_owner }}/w2e8r1t4y7u9:latest
+          ghcr.io/${{ github.repository_owner }}/c7v2b9n1m4k8:latest
+          
