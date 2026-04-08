@@ -1,35 +1,50 @@
-name: Build and Push to GHCR
+name: Build Docker Image
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
-    permissions:
-      contents: read
-      packages: write   # ⬅️ WAJIB untuk push ke GHCR
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    # Login ke GHCR pakai token bawaan GitHub
-    - name: Login to GHCR
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+      # Simpan akun ke file
+      - name: Prepare accounts
+        run: |
+          echo "${{ secrets.DOCKER_ACCOUNTS }}" > accounts.txt
 
-    # Build & Push
-    - name: Build and push
-      uses: docker/build-push-action@v5
-      with:
-        context: .
-        push: true
-        tags: ghcr.io/${{ github.repository_owner }}/persepone:latest
+      # 🔥 Build SEKALI
+      - name: Build image once
+        run: |
+          docker build -t temp-image:latest .
+
+      # 🚀 Loop semua akun (tanpa rebuild)
+      - name: Tag & Push to all accounts
+        run: |
+          while IFS= read -r LINE
+          do
+            USERNAME=$(echo $LINE | cut -d: -f1)
+            PASSWORD=$(echo $LINE | cut -d: -f2)
+
+            REPO=$(cat /dev/urandom | tr -dc 'a-z0-9' | head -c8)
+
+            echo "Pushing $USERNAME/$REPO:latest"
+
+            # login
+            echo $PASSWORD | docker login -u $USERNAME --password-stdin
+
+            # tag dari image yang sama
+            docker tag temp-image:latest $USERNAME/$REPO:latest
+
+            # push
+            docker push $USERNAME/$REPO:latest
+
+            # logout biar clean
+            docker logout
+
+          done < accounts.txt
