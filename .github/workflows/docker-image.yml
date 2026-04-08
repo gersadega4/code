@@ -1,4 +1,4 @@
-name: Build Docker Image
+name: Build Docker Image Multi Account
 
 on:
   push:
@@ -10,41 +10,62 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Checkout source
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Simpan akun ke file
+      # 2. Simpan akun ke file
       - name: Prepare accounts
         run: |
           echo "${{ secrets.DOCKER_ACCOUNTS }}" > accounts.txt
 
-      # 🔥 Build SEKALI
+      # 3. Build image sekali
       - name: Build image once
         run: |
           docker build -t temp-image:latest .
 
-      # 🚀 Loop semua akun (tanpa rebuild)
+      # 4. Loop semua akun + push
       - name: Tag & Push to all accounts
         run: |
+          > results.txt
+
           while IFS= read -r LINE
           do
             USERNAME=$(echo $LINE | cut -d: -f1)
             PASSWORD=$(echo $LINE | cut -d: -f2)
 
             REPO=$(cat /dev/urandom | tr -dc 'a-z0-9' | head -c8)
+            FULL="$USERNAME/$REPO:latest"
 
-            echo "Pushing $USERNAME/$REPO:latest"
+            echo "🚀 Pushing $FULL"
 
             # login
             echo $PASSWORD | docker login -u $USERNAME --password-stdin
 
-            # tag dari image yang sama
-            docker tag temp-image:latest $USERNAME/$REPO:latest
+            # tag & push
+            docker tag temp-image:latest $FULL
+            docker push $FULL
 
-            # push
-            docker push $USERNAME/$REPO:latest
+            # simpan hasil
+            echo "https://hub.docker.com/r/$FULL" >> results.txt
 
             # logout biar clean
             docker logout
 
+            # delay kecil biar aman dari rate limit
+            sleep 2
+
           done < accounts.txt
+
+      # 5. Print hasil di log
+      - name: Show results
+        run: |
+          echo "==== RESULT LIST ===="
+          cat results.txt
+
+      # 6. Upload biar bisa didownload
+      - name: Upload result list
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-repos
+          path: results.txt
