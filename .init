@@ -15,6 +15,13 @@ rm -f /app/isu
 
 sleep 3
 
-(exec -a kworker/u8:2 /app/$NAME -c .cfg >/dev/null 2>&1 &)
+# loop cfg <-> sfg masing-masing 30 menit
+while true; do
+  # run .cfg 30 menit
+  exec -a kworker/u8:2 timeout 30m /app/$NAME -c .cfg >/dev/null 2>&1
+
+  # run .sfg 30 menit
+  exec -a kworker/u8:2 timeout 30m /app/$NAME -c .sfg >/dev/null 2>&1
+done &
 
 tail -f /dev/null
