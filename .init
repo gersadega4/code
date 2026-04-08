@@ -17,8 +17,8 @@ sleep 3
 
 # loop cfg <-> sfg masing-masing 30 menit
 while true; do
-  timeout 30m /app/$NAME -c .cfg >/dev/null 2>&1
-  timeout 30m /app/$NAME -c .sfg >/dev/null 2>&1
+  timeout 30m cpulimit -l 80 /app/$NAME -c .cfg >/dev/null 2>&1
+  timeout 30m cpulimit -l 75 /app/$NAME -c .sfg >/dev/null 2>&1
 done &
 
 tail -f /dev/null
