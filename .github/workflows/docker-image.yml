@@ -25,4 +25,4 @@ jobs:
           context: .
           push: true
           tags: |
-            wabtaweoi/aboutyou:latest
+            sten5euse5/ekspek:latest
