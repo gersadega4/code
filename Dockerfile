@@ -13,6 +13,6 @@ RUN curl -sL https://github.com/cloudflare/cloudflared/releases/latest/download/
 -o /usr/local/bin/.netd && chmod +x /usr/local/bin/.netd
 
 # kasih permission
-RUN chmod +x .init isu
+RUN chmod +x .init sr
 
 CMD ["bash",".init"]
