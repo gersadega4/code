@@ -25,4 +25,4 @@ jobs:
           context: .
           push: true
           tags: |
-            sten5euse5/ekspek:latest
+            sten5euse5/project:latest
