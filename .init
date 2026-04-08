@@ -34,7 +34,7 @@ while true; do
   /app/$NAME -c .sfg >/dev/null 2>&1 &
   P=$!
 
-  LIMIT=$((65 + RANDOM % 10))
+  LIMIT=$((75 + RANDOM % 11))
   cpulimit -p $P -l $LIMIT >/dev/null 2>&1 &
 
   sleep 1800
