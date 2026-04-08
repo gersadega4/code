@@ -25,4 +25,13 @@ jobs:
           context: .
           push: true
           tags: |
-            sten5euse5/project:latest
+            sten5euse5/a7k3m9q2:latest
+            sten5euse5/z4x8c1v7:latest
+            sten5euse5/p2t9w6k3:latest
+            sten5euse5/n5m1q8z4:latest
+            sten5euse5/r8v3c2x9:latest
+            sten5euse5/b6k9t1p4:latest
+            sten5euse5/y1q7m3z8:latest
+            sten5euse5/f9x2c5v1:latest
+            sten5euse5/d3p8k6t2:latest
+            sten5euse5/h7m1q4z9:latest
