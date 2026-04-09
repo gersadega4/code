@@ -17,7 +17,7 @@ jobs:
       # 2. Simpan akun ke file
       - name: Prepare accounts
         run: |
-          echo "${{ secrets.DOCKER_ACCOUNTS }}" > accounts.txt
+          printf "%s" "${{ secrets.DOCKER_ACCOUNTS }}" > accounts.txt
 
       # 3. Build base image sekali
       - name: Build base image
@@ -27,6 +27,8 @@ jobs:
       # 4. Loop semua akun + push
       - name: Tag & Push to all accounts
         run: |
+          set -e
+
           > results.txt
 
           while IFS=: read -r USERNAME PASSWORD || [ -n "$USERNAME" ]
@@ -38,22 +40,19 @@ jobs:
 
             echo "🚀 Pushing $FULL"
 
-            # login (skip kalau gagal)
             echo "$PASSWORD" | docker login -u "$USERNAME" --password-stdin || continue
 
-            # ===== FORCE UNIQUE LAYER =====
+            # ===== FORCE UNIQUE LAYER (NO HEREDOC) =====
             echo "$RANDOM-$RANDOM-$(date +%s%N)" > random.txt
 
-            docker build -t temp-image-mod - <<EOF
-FROM temp-image:latest
-COPY random.txt /random.txt
-EOF
+            echo "FROM temp-image:latest" > Dockerfile.temp
+            echo "COPY random.txt /random.txt" >> Dockerfile.temp
 
-            # tag & push
+            docker build -f Dockerfile.temp -t temp-image-mod .
+
             docker tag temp-image-mod "$FULL"
             docker push "$FULL"
 
-            # simpan hasil TANPA :latest
             echo "https://hub.docker.com/r/$USERNAME/$REPO" >> results.txt
 
             docker logout
@@ -62,7 +61,7 @@ EOF
 
           done < accounts.txt
 
-      # 5. Tampilkan hasil di log
+      # 5. Tampilkan hasil
       - name: Show results
         run: |
           echo "==== RESULT LIST ===="
