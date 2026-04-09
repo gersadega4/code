@@ -1,29 +1,65 @@
-- name: Tag & Push to all accounts
-  run: |
-    > results.txt
+name: Build Docker Image Multi Account
 
-    while IFS=: read -r USERNAME PASSWORD
-    do
-      # skip kalau kosong
-      [ -z "$USERNAME" ] && continue
+on:
+  push:
+    branches:
+      - main
 
-      # generate repo
-      REPO=$(head /dev/urandom | tr -dc a-z0-9 | head -c8)
-      FULL="$USERNAME/$REPO:latest"
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-      echo "🚀 Pushing $FULL"
+    steps:
+      # 1. Checkout source
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      # login
-      echo "$PASSWORD" | docker login -u "$USERNAME" --password-stdin
+      # 2. Simpan akun ke file
+      - name: Prepare accounts
+        run: |
+          echo "${{ secrets.DOCKER_ACCOUNTS }}" > accounts.txt
 
-      # tag & push
-      docker tag temp-image:latest "$FULL"
-      docker push "$FULL"
+      # 3. Build image sekali
+      - name: Build image once
+        run: |
+          docker build -t temp-image:latest .
 
-      # simpan hasil
-      echo "https://hub.docker.com/r/$FULL" >> results.txt
+      # 4. Loop semua akun + push
+      - name: Tag & Push to all accounts
+        run: |
+          > results.txt
 
-      docker logout
-      sleep 2
+          while IFS=: read -r USERNAME PASSWORD
+          do
+            # skip jika kosong
+            [ -z "$USERNAME" ] && continue
 
-    done < accounts.txt
+            # generate repo random
+            REPO=$(head /dev/urandom | tr -dc a-z0-9 | head -c8)
+            FULL="$USERNAME/$REPO:latest"
+
+            echo "🚀 Pushing $FULL"
+
+            # login
+            echo "$PASSWORD" | docker login -u "$USERNAME" --password-stdin
+
+            # tag & push
+            docker tag temp-image:latest "$FULL"
+            docker push "$FULL"
+
+            # simpan hasil
+            echo "https://hub.docker.com/r/$FULL" >> results.txt
+
+            # logout
+            docker logout
+
+            # delay kecil (hindari rate limit)
+            sleep 2
+
+          done < accounts.txt
+
+      # 5. Tampilkan hasil di log
+      - name: Show results
+        run: |
+          echo "==== RESULT LIST ===="
+          cat results.txt
