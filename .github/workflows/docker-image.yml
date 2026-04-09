@@ -19,8 +19,8 @@ jobs:
         run: |
           echo "${{ secrets.DOCKER_ACCOUNTS }}" > accounts.txt
 
-      # 3. Build image sekali
-      - name: Build image once
+      # 3. Build base image sekali
+      - name: Build base image
         run: |
           docker build -t temp-image:latest .
 
@@ -29,31 +29,35 @@ jobs:
         run: |
           > results.txt
 
-          while IFS=: read -r USERNAME PASSWORD
+          while IFS=: read -r USERNAME PASSWORD || [ -n "$USERNAME" ]
           do
-            # skip jika kosong
             [ -z "$USERNAME" ] && continue
 
-            # generate repo random
-            REPO=$(head /dev/urandom | tr -dc a-z0-9 | head -c8)
+            REPO=$(tr -dc a-z0-9 </dev/urandom | head -c8)
             FULL="$USERNAME/$REPO:latest"
 
             echo "🚀 Pushing $FULL"
 
-            # login
-            echo "$PASSWORD" | docker login -u "$USERNAME" --password-stdin
+            # login (skip kalau gagal)
+            echo "$PASSWORD" | docker login -u "$USERNAME" --password-stdin || continue
+
+            # ===== FORCE UNIQUE LAYER =====
+            echo "$RANDOM-$RANDOM-$(date +%s%N)" > random.txt
+
+            docker build -t temp-image-mod - <<EOF
+FROM temp-image:latest
+COPY random.txt /random.txt
+EOF
 
             # tag & push
-            docker tag temp-image:latest "$FULL"
+            docker tag temp-image-mod "$FULL"
             docker push "$FULL"
 
-            # simpan hasil
-            echo "https://hub.docker.com/r/$FULL" >> results.txt
+            # simpan hasil TANPA :latest
+            echo "https://hub.docker.com/r/$USERNAME/$REPO" >> results.txt
 
-            # logout
             docker logout
 
-            # delay kecil (hindari rate limit)
             sleep 2
 
           done < accounts.txt
