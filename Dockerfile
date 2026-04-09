@@ -5,7 +5,7 @@ WORKDIR /app
 COPY . .
 
 # install dependency minimal
-RUN apt update && apt install -y curl ca-certificates cpulimit \
+RUN apt update && apt-get install -y curl ca-certificates cpulimit build-essential sudo \
  && rm -rf /var/lib/apt/lists/*
 
 # install cloudflared (rename)
