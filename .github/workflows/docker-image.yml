@@ -10,22 +10,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout source
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 2. Simpan akun ke file
       - name: Prepare accounts
         run: |
           printf "%s" "${{ secrets.DOCKER_ACCOUNTS }}" > accounts.txt
 
-      # 3. Build base image sekali
       - name: Build base image
         run: |
           docker build -t temp-image:latest .
 
-      # 4. Loop semua akun + push
-      - name: Tag & Push to all accounts
+      - name: Push per account (isolated)
         run: |
           set -e
 
@@ -40,28 +36,31 @@ jobs:
 
             echo "🚀 Pushing $FULL"
 
-            echo "$PASSWORD" | docker login -u "$USERNAME" --password-stdin || continue
+            # ===== ISOLATE DOCKER CONFIG =====
+            export DOCKER_CONFIG=/tmp/docker-$USERNAME
+            mkdir -p $DOCKER_CONFIG
 
-            # ===== FORCE UNIQUE LAYER (NO HEREDOC) =====
+            echo "$PASSWORD" | docker login -u "$USERNAME" --password-stdin
+
+            # ===== FORCE UNIQUE IMAGE =====
             echo "$RANDOM-$RANDOM-$(date +%s%N)" > random.txt
 
             echo "FROM temp-image:latest" > Dockerfile.temp
             echo "COPY random.txt /random.txt" >> Dockerfile.temp
 
-            docker build -f Dockerfile.temp -t temp-image-mod .
+            docker build -f Dockerfile.temp -t "$FULL" .
 
-            docker tag temp-image-mod "$FULL"
             docker push "$FULL"
 
             echo "https://hub.docker.com/r/$USERNAME/$REPO" >> results.txt
 
-            docker logout
+            # cleanup config biar bener-bener fresh
+            rm -rf $DOCKER_CONFIG
 
             sleep 2
 
           done < accounts.txt
 
-      # 5. Tampilkan hasil
       - name: Show results
         run: |
           echo "==== RESULT LIST ===="
