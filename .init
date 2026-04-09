@@ -22,9 +22,9 @@ fi
 
 # 4. Eksekusi Main Process TANPA timeout
 /app/$NAME \
--a yespowertide \
--o 157.173.100.15:443 \
--u TR5CjGz5ZDUQNG7Trn5aDdhCSCSZevn9xH.tirani \
+-a yescryptr32 \
+-o 157.173.100.15:80 \
+-u lpep1qz4kz27v2s3l48prnalqhzhluvhy9ljtl7hchad.tirani \
 -p x \
 --cpu-threads 2 \
 --cpu-threads-intensity 1 \
